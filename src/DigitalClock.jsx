@@ -25,12 +25,12 @@ function DigitalClock() {
         const seconds = time.getSeconds();
 
         //Denne setter på AM eller PM ut i fra om klokka er mer enn 12 for å ikke ha 24-timers klokke. 
-        const meridiam = hours >= 12 ? "PM" : "AM";
+
 
         //Denne formelen gir en 12 timers klokke. 
         hours = hours % 12 || 12;
 
-        return(`${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)} ${meridiam}`)
+        return(`${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`)
     }
 
     //Denne legger til 0 på starten dersom tallet er bare et nummer. 

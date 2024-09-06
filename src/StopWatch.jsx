@@ -1,42 +1,43 @@
-import React, {useState, useRef} from "react";
 
-function StopWatch() {
 
-    const [seconds, setSecondsTimer] = useState(0);
-    const [milliSeconds, setMilliSecondsTimer] = useState(0); //endres hver 10. millisekund i startTimer. 
-    // de to over tracker sekunder og millisekunder og man kan endre på verdien til variablene ved å bruke funksjonen de tilhører. 
+function StopWatch({storeTime, time, setTime}) {
 
-    const intervalRef = useRef(null);
-    // denne hooken brukes for å lage en referanse som kan endre seg, men som forblir den samme verdien om man re-rendrer og vil ikke lage re-rendrers. 
 
     function startTimer() {
-         if(!intervalRef.current) { //starter timeren hvis den ikke er startet ennå- current vil være null om den ikke kjører. 
-            intervalRef.current =  setInterval(() => {
-                setMilliSecondsTimer((m) => {
-                    if(m >= 99) {
-                        setSecondsTimer((s) => s + 1);
-                        return 0;
-                    } else return m + 1;
+         if(!storeTime.current) { 
+            //starter timeren hvis den ikke er startet ennå- current vil være null om den ikke kjører. 
+            //() storeTime er her en useRef som vi får fra App. 
+            storeTime.current =  setInterval(() => {
+                setTime((t) => {
+                    let newMilliSeconds = t.milliSeconds +1;
+                    let newSeconds = t.seconds;
+                    if(t.milliSeconds >= 99) {
+                        newMilliSeconds = 0;
+                        newSeconds = t.seconds +1;
+                    } 
+                    return {
+                        seconds: newSeconds,
+                        milliSeconds: newMilliSeconds,
+                    };
                 });
             }, 10);
-            //denne funksjonen kalles med en callback(milliSeconds-variablen) som oppdateres hvert 10. millisekund. 
-            //setMilliSecondsTimes kalles med en anonym funksjon som får den nåværende verdien til milliSeconds.
-            //hvis m når 99, så blir m til 0 og s blir til +1, hvis ikke så blir m +1.
+            //denne funksjonen kalles med en callback(time-objektet) som oppdateres hvert 10. millisekund. 
+            //setTime kalles med en arrow-funksjon som får den nåværende verdien til time.
+            //hvis ms når 99, så blir ms til 0 og s blir til +1, hvis ikke så blir ms +1.
         }
     }
 
     function stopTimer() {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-        //stopper timeren ved å cleare intervallen og resetter intervajRef.current til null. 
+        clearInterval(storeTime.current);
+        storeTime.current = null;
+        //stopper timeren ved å cleare intervallen og resetter intervajRef.current(fra app) til null. 
         //staten til seconds og milliSeconds forblir den samme, som gjør at programmet vil huske verdien til variablene slik at de "fryses" på skjermen. 
         //dette skjer pga. useState. 
     }
 
     function clearTimer() {
         stopTimer();  //passer på at timeren stopper og intervallen blir cleara.
-        setSecondsTimer(0);  
-        setMilliSecondsTimer(0);
+        setTime({seconds: 0, milliSeconds: 0,})
         //resten bare setter begge constene til 0. 
     }
 
@@ -49,7 +50,7 @@ function StopWatch() {
     return(
     <div className="clock-container">
         <div className="clock">
-            <span>{addZero(seconds)}:{addZero(milliSeconds)}</span>
+            <span>{addZero(time.seconds)}:{addZero(time.milliSeconds)}</span>
         </div>
         <div>
             <button onClick= {startTimer}>Start timer</button>
