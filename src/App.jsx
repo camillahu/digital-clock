@@ -2,7 +2,6 @@ import { useState, useRef } from "react"
 import DigitalClock from "./DigitalClock"
 import StopWatch from "./StopWatch"
 
-
 function App() {
 
   const [page, setPage] = useState('digitalClock');

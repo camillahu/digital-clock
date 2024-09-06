@@ -28,7 +28,7 @@ function DigitalClock() {
 
 
         //Denne formelen gir en 12 timers klokke. 
-        hours = hours % 12 || 12;
+        // hours = hours % 12 || 12;
 
         return(`${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`)
     }
